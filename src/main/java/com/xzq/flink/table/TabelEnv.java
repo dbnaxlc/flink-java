@@ -9,25 +9,17 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.TimeCharacteristic;
-import org.apache.flink.streaming.api.datastream.DataStream;
-import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
-import org.apache.flink.streaming.connectors.kafka.KafkaJsonTableSource;
-import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.TableEnvironment;
 import org.apache.flink.table.api.Types;
-import org.apache.flink.table.plan.schema.StreamTableSourceTable;
 import org.apache.flink.types.Row;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 
 import com.alibaba.fastjson.JSONObject;
-import com.enniu.cloud.services.riskbrain.flink.job.EnniuKafkaSource;
 
 public class TabelEnv {
 
@@ -79,30 +71,6 @@ public class TabelEnv {
 			pro.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "xzq0521");
 			env.addSource(new FlinkKafkaConsumer<String>("xzq0426", new SimpleStringSchema(), pro));
 	 
-	        KafkaJsonTableSource tableSource = new EnniuKafkaSource(
-	            KAFKATOPIC,
-	            kafkaProperties,
-	            typeInfo);
-	 
-	 
-	        sTableEnv.registerTableSource("table1", tableSource);
-	 
-	        Table table = sTableEnv.sql("SELECT SUM(score),name FROM table1  group by name");
-	 
-	        //table to stream for Retract model
-	        DataStream<Tuple2<Boolean, Row>> tuple2DataStream = sTableEnv.toRetractStream(table, Row.class);
-	 
-	        SingleOutputStreamOperator<String> desStream = tuple2DataStream
-	            .map(new MapFunction<Tuple2<Boolean, Row>, String>() {
-	 
-	                @Override
-	                public String map(Tuple2<Boolean, Row> value) throws Exception {
-	 
-	                    return value.f1.toString();
-	                }
-	            });
-	 
-	        desStream.print();
 	 
 	        env.execute();
 	 
