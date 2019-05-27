@@ -14,13 +14,9 @@
 			<version>${flink.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.flink</groupId>
-			<artifactId>flink-streaming-java_2.11</artifactId>
-			<version>${flink.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<!-- <dependency> <groupId>org.apache.flink</groupId> <artifactId>flink-scala_2.11</artifactId> 
+		<!-- <dependency> <groupId>org.apache.flink</groupId> <artifactId>flink-streaming-java_2.11</artifactId> 
+			<version>${flink.version}</version> <scope>provided</scope> </dependency> 
+			<dependency> <groupId>org.apache.flink</groupId> <artifactId>flink-scala_2.11</artifactId> 
 			<version>${flink.version}</version> <scope>provided</scope> </dependency> -->
 		<dependency>
 			<groupId>org.apache.flink</groupId>
@@ -47,6 +43,16 @@
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.2.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-avro</artifactId>
+			<version>1.7.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-json</artifactId>
+			<version>1.7.1</version>
 		</dependency>
 	</dependencies>
 	<build>
