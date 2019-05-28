@@ -9,6 +9,8 @@ import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.TableEnvironment;
 import org.apache.flink.table.api.java.StreamTableEnvironment;
 
+import com.xzq.flink.table.dto.WordCount;
+
 public class FlinkSql2 {
 
 	public static void main(String[] args) throws Exception {

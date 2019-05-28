@@ -9,6 +9,8 @@ import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.TableEnvironment;
 import org.apache.flink.table.api.java.BatchTableEnvironment;
 
+import com.xzq.flink.table.dto.WordCount;
+
 /**
  * Flink SQL的编程模型
 创建一个TableEnvironment:TableEnvironment是Table API和SQL集成的核心概念，它主要负责:

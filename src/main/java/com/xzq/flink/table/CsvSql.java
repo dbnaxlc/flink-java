@@ -9,6 +9,8 @@ import org.apache.flink.table.api.java.BatchTableEnvironment;
 import org.apache.flink.table.sinks.CsvTableSink;
 import org.apache.flink.table.sinks.TableSink;
 
+import com.xzq.flink.table.dto.WordCount;
+
 public class CsvSql {
 
 	@SuppressWarnings("rawtypes")
