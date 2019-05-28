@@ -1,7 +1,5 @@
 package com.xzq.flink.table.dto;
 
-import java.sql.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,5 +22,5 @@ public class AccessLog {
 	
 	private String userId;
 	
-	private Date accessTime;
+	private Long accessTime;
 }

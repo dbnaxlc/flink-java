@@ -26,17 +26,28 @@ public class CsvSql {
 		tableEnv.registerTable("test", table);
 		Table word = tableEnv.scan("test").select("word,frequency");
 		word.printSchema();
+		String explanation = tableEnv.explain(word);
+		System.out.println(explanation);
 		
 		Table sqlQuery = tableEnv.sqlQuery("select word, sum(frequency) as total from test group by word order by total desc");
-		
 		DataSet<Result> result = tableEnv.toDataSet(sqlQuery, Result.class);
 		result.print();
+		explanation = tableEnv.explain(sqlQuery);
+		System.out.println(explanation);
 		
 		TableSink sink = new CsvTableSink("G:/SQLTEST1.txt", "|");
 		String[] fieldNames = {"word", "total"};
 		TypeInformation[] fieldTypes = {Types.STRING, Types.LONG};
 		tableEnv.registerTableSink("SQLTEST", fieldNames, fieldTypes, sink);
 		sqlQuery.insertInto("SQLTEST");
+		
+		Table tableFilter = tableEnv.scan("test").filter("word = 'xzq'").groupBy("word").select("word, sum(frequency) as total, count(1) as cc");
+		TableSink sink1 = new CsvTableSink("G:/SQLTEST2.txt", "|");
+		String[] fieldNames1 = {"word", "total", "cc"};
+		TypeInformation[] fieldTypes1 = {Types.STRING, Types.LONG, Types.LONG};
+		tableEnv.registerTableSink("SQLTEST2", fieldNames1, fieldTypes1, sink1);
+		tableFilter.insertInto("SQLTEST2");
+		
 		env.execute();
 	}
 
