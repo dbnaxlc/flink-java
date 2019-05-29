@@ -1,4 +1,4 @@
-package com.xzq.flink.table.tablesource;
+package com.xzq.flink.table.time;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,12 @@ import org.apache.flink.table.sources.StreamTableSource;
 
 import com.xzq.flink.table.dto.Trade;
 
-public class DataStreamTableSource implements StreamTableSource<Trade>, DefinedProctimeAttribute{
+/**
+ * 添加处理时间处理列
+ * @author XIAZHIQIANG
+ *
+ */
+public class DataStreamProcTimeTableSource implements StreamTableSource<Trade>, DefinedProctimeAttribute{
 
 	@Override
 	public String explainSource() {
@@ -34,11 +39,9 @@ public class DataStreamTableSource implements StreamTableSource<Trade>, DefinedP
 
 	@Override
 	public TableSchema getTableSchema() {
-		String[] fields = { "catg", "cnt", "ts", "price" };
-		TypeInformation[] fieldTypes = { Types.STRING, Types.INT, Types.LONG, Types.DOUBLE };
 //		添加自定义处理时间列
-//		String[] fields = { "catg", "cnt", "ts", "price", "DateProcTime" };
-//		TypeInformation[] fieldTypes = { Types.STRING, Types.INT, Types.LONG, Types.DOUBLE, Types.SQL_TIMESTAMP };
+		String[] fields = { "catg", "cnt", "ts", "price", "DateProcTime" };
+		TypeInformation[] fieldTypes = { Types.STRING, Types.INT, Types.LONG, Types.DOUBLE, Types.SQL_TIMESTAMP };
 		return new TableSchema(fields, fieldTypes);
 	}
 
