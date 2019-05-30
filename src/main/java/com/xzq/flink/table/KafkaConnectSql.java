@@ -13,6 +13,17 @@ import org.apache.flink.table.descriptors.Schema;
 import org.apache.flink.types.Row;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 
+/**
+ * StreamTableEnvironment的connect方法创建StreamTableDescriptor；
+ * StreamTableDescriptor继承了ConnectTableDescriptor；
+ * ConnectTableDescriptor提供了withSchema方法，返回Schema
+ * Schem提供了field、from、proctime、rowtime方法用于定义Schema的相关属性；
+ * 通过proctime定义processing-time，通过rowtime定义event-time，通过from定义引用或别名
+ * Rowtime提供了timestampsFromField、timestampsFromSource、timestampsFromExtractor方法用于定义timestamps；
+ * 提供了watermarksPeriodicAscending、watermarksPeriodicBounded、watermarksFromSource、watermarksFromStrategy方法用于定义watermark strategies
+ * @author dbnaxlc
+ * @date 2019年5月30日 上午11:57:46
+ */
 public class KafkaConnectSql {
 
 	public static void main(String[] args) throws Exception {

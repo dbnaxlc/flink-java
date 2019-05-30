@@ -1,4 +1,4 @@
-package com.xzq.flink.table.time;
+package com.xzq.flink.table.time.proctime;
 
 import org.apache.flink.streaming.api.TimeCharacteristic;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;

@@ -1,4 +1,4 @@
-package com.xzq.flink.table.time;
+package com.xzq.flink.table.time.proctime;
 
 import java.util.ArrayList;
 import java.util.List;
