@@ -1,4 +1,4 @@
-package com.xzq.flink;
+package com.xzq.flink.datastream;
 
 import java.util.Iterator;
 

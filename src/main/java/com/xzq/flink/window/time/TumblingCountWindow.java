@@ -28,7 +28,9 @@ public class TumblingCountWindow {
 					}
 				})
 				// 推断不出来返回的集合是SimpleTuple的泛型。只能通过returns()明确返回类型
-				.returns(Types.TUPLE(SimpleTuple.class)).keyBy(0)
+				.returns(Types.TUPLE(SimpleTuple.class))
+				//keyby不支持2种：1/pojo类没有定义hashcode方法；2/任何数据类型的数组
+				.keyBy(0)
 				// 每2秒没计算窗口内总数
 				.timeWindow(Time.seconds(2))
 				.sum(1).print();

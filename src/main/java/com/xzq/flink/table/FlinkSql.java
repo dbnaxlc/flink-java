@@ -9,7 +9,7 @@ import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.TableEnvironment;
 import org.apache.flink.table.api.java.BatchTableEnvironment;
 
-import com.xzq.flink.table.dto.WordCount;
+import com.xzq.flink.dto.WordCount;
 
 /**
  * Flink SQL的编程模型

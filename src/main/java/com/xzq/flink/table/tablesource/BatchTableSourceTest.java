@@ -5,7 +5,7 @@ import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.java.BatchTableEnvironment;
 
-import com.xzq.flink.table.dto.WordCount;
+import com.xzq.flink.dto.WordCount;
 
 public class BatchTableSourceTest {
 

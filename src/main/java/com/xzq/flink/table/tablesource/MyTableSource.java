@@ -10,7 +10,7 @@ import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.table.api.TableSchema;
 import org.apache.flink.table.sources.BatchTableSource;
 
-import com.xzq.flink.table.dto.WordCount;
+import com.xzq.flink.dto.WordCount;
 
 public class MyTableSource implements BatchTableSource<WordCount> {
 

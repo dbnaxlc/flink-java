@@ -14,9 +14,8 @@ public class SourceFromOracle extends RichSourceFunction<CapitalAccount> {
 	PreparedStatement ps;
 	private Connection connection;
 
-	private static final String QUERY_KFTACCOUNTS = "select CAPITAL_ACCOUNT_ID, USER_ACCOUNT_ID, BALANCE, USEABLE_AMT, "
-			+ "DRAWABLE_AMT, FORCE_FREEZE_AMT, IS_OVERDRAW, DIGEST, CREATED_TIME from kftbank2.t_capital_account a "
-			+ "where a.capital_account_id in (821066,821065,926006,925956)";
+	private static final String QUERY_KFTACCOUNTS = "select * from t_capital_account a "
+			+ "where a.capital_account_id =1";
 
 	/**
 	 * open() 方法中建立连接，这样不用每次 invoke 的时候都要建立连接和释放连接。
@@ -48,15 +47,15 @@ public class SourceFromOracle extends RichSourceFunction<CapitalAccount> {
 		while (rs.next()) {
 			CapitalAccount capitalAccount = new CapitalAccount();
 			capitalAccount.setCapitalAccountId(Long.valueOf(rs
-					.getLong("CAPITAL_ACCOUNT_ID")));
+					.getLong(1)));
 			capitalAccount
-					.setUserAccountId(rs.getString("USER_ACCOUNT_ID"));
-			capitalAccount.setBalance(rs.getDouble("BALANCE"));
-			capitalAccount.setUseableAmt(rs.getBigDecimal("USEABLE_AMT"));
-			capitalAccount.setDrawableAmt(rs.getBigDecimal("DRAWABLE_AMT"));
+					.setUserAccountId(rs.getString(2));
+			capitalAccount.setBalance(rs.getDouble(3));
+			capitalAccount.setUseableAmt(rs.getBigDecimal(4));
+			capitalAccount.setDrawableAmt(rs.getBigDecimal(5));
 			capitalAccount.setForceFreezeAmt(rs
-					.getBigDecimal("FORCE_FREEZE_AMT"));
-			capitalAccount.setDigest(rs.getString("DIGEST"));
+					.getBigDecimal(6));
+			capitalAccount.setDigest(rs.getString(7));
 			ctx.collect(capitalAccount);
 		}
 

@@ -18,7 +18,7 @@ import org.apache.flink.table.api.WindowedTable;
 import org.apache.flink.table.api.java.StreamTableEnvironment;
 import org.apache.flink.table.api.java.Tumble;
 
-import com.xzq.flink.table.dto.WordCount;
+import com.xzq.flink.dto.WordCount;
 import com.xzq.flink.table.dto.WordCountEventTime;
 
 public class DataSetTableExtenalEventTime {

@@ -1,4 +1,4 @@
-package com.xzq.flink.table.dto;
+package com.xzq.flink.dto;
 
 public class WordCount {
     public String word;
