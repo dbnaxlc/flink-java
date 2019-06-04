@@ -45,6 +45,7 @@ public class SessionWindow2 {
         );
         // 窗口聚合,event_time + windowGap < watermark时，数据丢失
         SingleOutputStreamOperator<Tuple3<String, String, Long>> sides = stream.keyBy(0).window(EventTimeSessionWindows.withGap(Time.milliseconds(windowGap)))
+        		.allowedLateness(Time.seconds(1))
         //超过watermark的数据，侧路输出
         .sideOutputLateData(REJECTEDWORDSTAG)
         .reduce(
