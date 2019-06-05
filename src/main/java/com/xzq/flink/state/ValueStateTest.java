@@ -11,14 +11,26 @@ import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.configuration.Configuration;
+import org.apache.flink.runtime.state.filesystem.FsStateBackend;
+import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.api.environment.CheckpointConfig.ExternalizedCheckpointCleanup;
 import org.apache.flink.util.Collector;
 
 public class ValueStateTest {
 
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) throws Exception {
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+		env.enableCheckpointing(5000, CheckpointingMode.EXACTLY_ONCE);
+		env.getCheckpointConfig().setMaxConcurrentCheckpoints(1);
+		env.getCheckpointConfig().setCheckpointTimeout(2000);
+		env.getCheckpointConfig().setCheckpointInterval(5000);
+		env.getCheckpointConfig().setMinPauseBetweenCheckpoints(5000);
+		env.getCheckpointConfig().setFailOnCheckpointingErrors(false);
+		env.getCheckpointConfig().enableExternalizedCheckpoints(ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
+		env.setStateBackend(new FsStateBackend("file:/G:\\lib"));
 		DataStreamSource<Tuple2<String, Integer>> ds = env.fromElements(new Tuple2<String, Integer>("a", 1),
 				new Tuple2<String, Integer>("a", 2), new Tuple2<String, Integer>("a", 3),
 				new Tuple2<String, Integer>("a", 4), new Tuple2<String, Integer>("a", 6),
