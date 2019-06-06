@@ -2,7 +2,6 @@ package com.xzq.flink.dataset;
 
 import java.util.Iterator;
 
-import org.apache.flink.api.common.functions.CoGroupFunction;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.operators.DataSource;
@@ -35,7 +34,10 @@ public class DataSetJoin {
 							}
 						}
 					})
+//		.withForwardedFieldsFirst("f0->f0","f1->f1")
+//		.withForwardedFieldsSecond("f1->f2")
 		.returns(new TypeHint<Tuple3<Integer, Integer, String>>() {}).print();
+		
 	}
 
 }

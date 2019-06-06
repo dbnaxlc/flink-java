@@ -14,7 +14,7 @@ public class FlinkFromKafka {
 		Properties pro = new Properties();
 		pro.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.16.5.120:9092,172.16.5.140:9092,172.16.5.223:9092");
 		pro.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "xzq0521");
-		env.addSource(new FlinkKafkaConsumer<String>("xzq0426", new SimpleStringSchema(), pro)).print();
+		env.addSource(new FlinkKafkaConsumer<String>("xzq0526", new SimpleStringSchema(), pro)).print();
 		env.execute("flink-kafka");
 	}
 
