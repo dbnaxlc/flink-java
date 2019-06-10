@@ -24,10 +24,13 @@ public class FlinkSql2 {
             list.add(wc);
         }
 		DataStreamSource<WordCount> input = env.fromCollection(list);
-        tableEnv.registerDataStream("WordCount", input, "word, frequency");
+        tableEnv.registerDataStream("WordCount", input, "word, frequency as frequencys");
         Table table = tableEnv.sqlQuery(
-                "SELECT word, SUM(frequency) as frequency FROM WordCount GROUP BY word");
-        tableEnv.toRetractStream(table, WordCount.class).print();
+                "SELECT word, SUM(frequencys) as frequency FROM WordCount GROUP BY word");
+        tableEnv.toRetractStream(table, WordCount.class).filter(i -> i.f0).print();
+        Table table2 = tableEnv.sqlQuery(
+                "SELECT word, frequencys as frequency FROM WordCount");
+        tableEnv.toAppendStream(table2, WordCount.class).print();
         env.execute();
 	}
 
