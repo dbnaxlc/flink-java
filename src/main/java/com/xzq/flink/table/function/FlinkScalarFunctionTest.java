@@ -1,8 +1,12 @@
 package com.xzq.flink.table.function;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.flink.api.java.DataSet;
 import org.apache.flink.api.java.ExecutionEnvironment;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.TableEnvironment;
 import org.apache.flink.table.api.java.BatchTableEnvironment;
@@ -17,6 +21,9 @@ public class FlinkScalarFunctionTest {
 
 	public static void main(String[] args) throws Exception {
 		ExecutionEnvironment env = ExecutionEnvironment.getExecutionEnvironment();
+		Map<String, String> map = new HashMap<>();
+		map.put("db.url", "10.37.10.100");
+		env.getConfig().setGlobalJobParameters(ParameterTool.fromMap(map));
         BatchTableEnvironment tableEnv = TableEnvironment.getTableEnvironment(env);
         DataSet<Tuple2<Integer, Integer>> input = env.fromElements(new Tuple2<Integer, Integer>(1,1),
         		new Tuple2<Integer, Integer>(2,2),
