@@ -30,8 +30,8 @@ public class FlinkToEs {
 		StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 		Properties pro = new Properties();
 		pro.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "172.16.5.120:9092,172.16.5.140:9092,172.16.5.223:9092");
-		pro.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "xzq0521");
-		
+		pro.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "xzq0524");
+		pro.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		DataStream<String> ds = env.addSource(new FlinkKafkaConsumer<String>("xzq0526", new SimpleStringSchema(), pro));
 		
 		Map<String, String> config = new HashMap<>();
@@ -57,9 +57,14 @@ public class FlinkToEs {
 			public IndexRequest createIndexRequest(Tuple2<String, Integer> element) {
 		        Map<String, Object> json = new HashMap<>();
 		        json.put("count", element.f1);
+		        json.put("id", element.f0 + "|" + element.f0);
+				json.put("parent", element.f0);
+				json.put("child", element.f0);
+				json.put("callCount", 1);
+				json.put("errorCount", 1);
 		        return Requests.indexRequest()
-		                .index("my-index")
-		                .type("my-type")
+		                .index("dependency-2019-07-02")
+		                .type("dependency")
 		                .id(element.f0)
 		                .source(json);
 		    }

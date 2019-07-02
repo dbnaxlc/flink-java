@@ -72,14 +72,19 @@
 			<version>${flink.version}</version>
 		</dependency>
 		<dependency>
-            <groupId>org.apache.flink</groupId>
-            <artifactId>flink-connector-elasticsearch5_2.11</artifactId>
-            <version>${flink.version}</version>
-        </dependency>
-        <dependency>
+			<groupId>org.apache.flink</groupId>
+			<artifactId>flink-connector-elasticsearch5_2.11</artifactId>
+			<version>${flink.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>io.zipkin.java</groupId>
 			<artifactId>zipkin</artifactId>
 			<version>2.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.auto.value</groupId>
+			<artifactId>auto-value</artifactId>
+			<version>1.4</version>
 		</dependency>
 	</dependencies>
 	<build>

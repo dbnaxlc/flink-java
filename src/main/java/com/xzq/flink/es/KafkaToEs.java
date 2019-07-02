@@ -2,22 +2,31 @@ package com.xzq.flink.es;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.flink.api.common.functions.RuntimeContext;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.streaming.connectors.elasticsearch.ElasticsearchSinkFunction;
+import org.apache.flink.streaming.connectors.elasticsearch.RequestIndexer;
+import org.apache.flink.streaming.connectors.elasticsearch5.ElasticsearchSink;
 import org.apache.flink.streaming.connectors.kafka.FlinkKafkaConsumer;
 import org.apache.flink.util.Collector;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.client.Requests;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -36,7 +45,7 @@ public class KafkaToEs {
 		Properties pro = new Properties();
 		pro.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
 				"172.16.5.120:9092,172.16.5.140:9092,172.16.5.223:9092");
-		pro.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "xzq05185");
+		pro.setProperty(ConsumerConfig.GROUP_ID_CONFIG, "xzq0525");
 		pro.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 		DataStream<String> ds = env.addSource(new FlinkKafkaConsumer<String>("zipkin", new SimpleStringSchema(), pro));
 
@@ -63,39 +72,35 @@ public class KafkaToEs {
 			return new Tuple2<String, Set<Span>>(value1.f0, value1.f1);
 		}).map(value -> {
 			DependencyLinker linker = new DependencyLinker();
-		    linker.putTrace(value.f1.iterator());
-		    return linker.link();
+			linker.putTrace(value.f1.iterator());
+			return linker.link();
 		}).returns(new TypeHint<List<DependencyLink>>() {
-		}).print();
-		// ds.map(value -> {
-		// JSONObject json = JSONObject.parseObject(value);
-		// return new Tuple2<String, Integer>((String)json.get("name"), 1);
-		// }).returns(new TypeHint<Tuple2<String, Integer>>() {
-		// }).keyBy(0).sum(1)
-		// .addSink(new ElasticsearchSink<>(config, transportAddresses,new
-		// ElasticsearchSinkFunction<Tuple2<String, Integer>>() {
-		//
-		// private static final long serialVersionUID = -249587173803317948L;
-		//
-		// @Override
-		// public void process(Tuple2<String, Integer> value, RuntimeContext context,
-		// RequestIndexer indexer) {
-		// indexer.add(createIndexRequest(value));
-		// }
-		//
-		// public IndexRequest createIndexRequest(Tuple2<String, Integer> element) {
-		// Map<String, Object> json = new HashMap<>();
-		// json.put("count", element.f1);
-		// return Requests.indexRequest()
-		// .index("my-index")
-		// .type("my-type")
-		// .id(element.f0)
-		// .source(json);
-		// }
-		//
-		//
-		// } ));
-		env.execute("flink-kafka");
+		}).addSink(new ElasticsearchSink<>(config, transportAddresses,
+				new ElasticsearchSinkFunction<List<DependencyLink>>() {
+
+					private static final long serialVersionUID = -249587173803317948L;
+
+					public IndexRequest createIndexRequest(DependencyLink element) {
+						Map<String, Object> json = new LinkedHashMap<>();
+						json.put("id", element.parent + "|" + element.child);
+						json.put("parent", element.parent);
+						json.put("child", element.child);
+						json.put("callCount", element.callCount);
+						json.put("errorCount", element.errorCount);
+						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+						return Requests.indexRequest().index("zipkin:dependency-" + sdf.format(new Date()))
+								.type("dependency").id(element.parent + "|" + element.child).source(json);
+					}
+
+					@Override
+					public void process(List<DependencyLink> value, RuntimeContext context, RequestIndexer indexer) {
+						for (DependencyLink link : value) {
+							indexer.add(createIndexRequest(link));
+						}
+					}
+
+				}));
+		env.execute("flink-zipkin");
 	}
 
 }
